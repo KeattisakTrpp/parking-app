@@ -13,6 +13,10 @@ const userSchema = new Schema({
     color: { type: String, required: true },
     brand: { type: String, required: true }
   }],
+  parkings: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Parking'
+  }]
 }, {
   timestamps: true,
 });
