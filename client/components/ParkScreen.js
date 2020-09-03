@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import  DateTimePicker  from '@react-native-community/datetimepicker'
 import moment from 'moment-timezone'
 import axios from 'axios'
 import styles from '../css/style'
 import DB from '../constance'
+import { park } from '../action'
 
 const ParkScreen = () => {
+    const dispatch = useDispatch()
     const user = useSelector(state => state.user)
+
     let currentDateTime = new Date(moment(Date.now()).tz('Asia/Bangkok'))
 
     const [date, setDate] = useState(currentDateTime)
@@ -63,16 +66,20 @@ const ParkScreen = () => {
     }
         
     const submit = () => {
+        // console.log(date.getTime())
+        // console.log(checkIn.getTime())
+        // console.log(checkOut.getTime())
         axios.post(`${DB}/users/book`, {
             _id: user._id,
             date: date.getTime(),
             checkIn: checkIn.getTime(),
             checkOut: checkOut.getTime()
         }).then(res => {
-            console.log(res.data)
-            currentDateTime = new Date(moment().tz('Asia/Bangkok').format())
-            setDate(currentDateTime)
-            setCheckIn(currentDateTime)
+            if(res.data === 'already reserved') return alert(res.data)
+            // currentDateTime = new Date(moment().tz('Asia/Bangkok').format())
+            // setDate(currentDateTime)
+            // setCheckIn(currentDateTime)
+            dispatch(park(res.data.parkings))
             alert("Booking complete")
         }).catch(err => {
             console.warn(err)

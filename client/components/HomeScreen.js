@@ -33,7 +33,6 @@ const HomeScreen = ({ navigation }) => {
             }
         }).catch(error=>{
             console.warn(error); 
-            // alert("ssss")
         })
     }
     _sign = () =>{

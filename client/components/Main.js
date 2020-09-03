@@ -7,6 +7,7 @@ import HomeScreen from './HomeScreen'
 import SignupScreen from './SignupScreen'
 import ParkScreen from './ParkScreen'
 import ProfileScreen from './ProfileScreen'
+import HistoryScreen from './HistoryScreen'
 import { AppearanceProvider, useColorScheme } from 'react-native-appearance'
 
 const Stack = createStackNavigator()
@@ -23,6 +24,7 @@ const DetailStact = () => {
         >
           <Tab.Screen name="Profile" component={ProfileScreen} options={option} />
           <Tab.Screen name="Park" component={ParkScreen} options={option} />
+          <Tab.Screen name="History" component={HistoryScreen} options={option} />
         </Tab.Navigator>
     )
 }
@@ -32,9 +34,9 @@ const Main = () => {
         <AppearanceProvider>
             <NavigationContainer theme={DarkTheme}>
                 <Stack.Navigator>
-                <Stack.Screen name="Home" component={HomeScreen} options={option} />
-                <Stack.Screen name="Signup" component={SignupScreen} options={option} />
-                <Stack.Screen name="Details" component={DetailStact} options={{title: "My App", headerLeft: null, ...option}} />
+                    <Stack.Screen name="Home" component={HomeScreen} options={option} />
+                    <Stack.Screen name="Signup" component={SignupScreen} options={option} />
+                    <Stack.Screen name="Details" component={DetailStact} options={{title: "My App", headerLeft: null, ...option}} />
                 </Stack.Navigator>
             </NavigationContainer>
         </AppearanceProvider>

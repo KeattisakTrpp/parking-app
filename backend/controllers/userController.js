@@ -3,22 +3,6 @@ let Parking = require('../models/parking.model')
 
 let parking_lot = 2
 
-const isExist = (parking) => {
-    parking.forEach(p => {
-        // already reserved
-        if(p.checkIn.getTime() <= checkIn && checkIn <= p.checkOut.getTime()) {
-            console.log("Checkin In Range")
-            return true
-        } else if((p.checkIn.getTime() <= checkOut && checkOut <= p.checkOut.getTime())) {
-            console.log("Checkout In Range")
-            return true
-        } else if(p.checkIn.getTime() > checkIn && checkOut > p.checkOut.getTime()) {
-            return true
-        }
-    })
-    return false
-}
-
 module.exports = {
     getAll: async (res) => {
         try {
@@ -55,7 +39,7 @@ module.exports = {
     login: async (req, res) => {
         const { username, password } = req.body
         try {
-            const user = await User.findOne({username})
+            const user = await User.findOne({username}).populate('parkings')
             console.log(user.password , password)
             if( user.password !== password ) return res.json('wrong')
             return res.json(user)
@@ -71,14 +55,28 @@ module.exports = {
                 $gte: new Date(date).setHours(0,0,0), $lt: new Date(date).setHours(23,59,59)
             }})
             
-            if(isExist(parking)) return res.json("already reserved")
+            let flag = false
+            parking.forEach(p => {
+                // already reserved
+                if(p.checkIn.getTime() <= checkIn && checkIn <= p.checkOut.getTime()) {
+                    console.log("Checkin In Range")
+                    flag = true
+                } else if((p.checkIn.getTime() <= checkOut && checkOut <= p.checkOut.getTime())) {
+                    console.log("Checkout In Range")
+                    flag = true
+                } else if(p.checkIn.getTime() > checkIn && checkOut > p.checkOut.getTime()) {
+                    flag = true
+                }
+            })
+            if(flag) return res.json("already reserved")
 
-            const newParking = new Parking({ date, checkIn, checkOut })
+            const newParking = new Parking({ date, checkIn, checkOut, status: "active" })
             await newParking.save()
             const user = await User.findById(_id)
             user.parkings.push(newParking._id)
             await user.save()
-            return res.json(user)
+            const result = await User.findById(_id).populate('parkings')
+            return res.json(result)
         } 
         catch(err) {
             return res.status(400).send(err)

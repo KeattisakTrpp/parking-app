@@ -4,3 +4,10 @@ export const login = (res) => {
         payload: res
     }
 }
+
+export const park = (res) => {
+    return {
+        type: 'PARK',
+        payload: res
+    }
+}

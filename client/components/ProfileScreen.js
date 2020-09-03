@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text , TouchableOpacity, StyleSheet, SectionList, View } from 'react-native'
+import { Text , TouchableOpacity, StyleSheet, SectionList, View} from 'react-native'
 import styles from '../css/style'
 
 const ProfileScreen = ({ route ,navigation }) => {
@@ -32,12 +32,6 @@ const ProfileScreen = ({ route ,navigation }) => {
                 >
                 </SectionList>
             </View>
-            <Text style={style.text}>
-                {route.params.profiledata.colour}
-            </Text>
-            <Text style={style.text}>
-                {route.params.profiledata.brand}
-            </Text>
             <View style={{flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <TouchableOpacity onPress={_home} style={style.logout} >
                     <Text style={{...style.text, fontSize: 20, marginTop: 0}}>
