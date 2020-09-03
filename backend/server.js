@@ -12,7 +12,7 @@ app.use(morgan("tiny"))
 app.use(cors());
 app.use(express.json());
 
-const uri = 'mongodb://192.168.99.100:27017/test' || process.env.ATLAS_URI;
+const uri = process.env.ATLAS_URI || 'mongodb://localhost:27017/test';
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true }
 );
 const connection = mongoose.connection;
