@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import  DateTimePicker  from '@react-native-community/datetimepicker'
 import moment from 'moment-timezone'
@@ -66,9 +66,6 @@ const ParkScreen = () => {
     }
         
     const submit = () => {
-        // console.log(date.getTime())
-        // console.log(checkIn.getTime())
-        // console.log(checkOut.getTime())
         axios.post(`${DB}/users/book`, {
             _id: user._id,
             date: date.getTime(),
