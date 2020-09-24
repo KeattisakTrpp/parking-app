@@ -50,6 +50,9 @@ module.exports = {
     }, 
     book: async (req, res) => {
         const { _id, date, checkIn, checkOut } = req.body
+        console.log(date)
+        console.log(checkIn)
+        console.log(checkOut)
         try {
             const parking = await Parking.find({date: {
                 $gte: new Date(date).setHours(0,0,0), $lt: new Date(date).setHours(23,59,59)
@@ -58,13 +61,14 @@ module.exports = {
             let flag = false
             parking.forEach(p => {
                 // already reserved
-                if(p.checkIn.getTime() <= checkIn && checkIn <= p.checkOut.getTime()) {
+                if(p.checkIn <= checkIn && checkIn <= p.checkOut) {
                     console.log("Checkin In Range")
                     flag = true
-                } else if((p.checkIn.getTime() <= checkOut && checkOut <= p.checkOut.getTime())) {
+                } else if((p.checkIn <= checkOut && checkOut <= p.checkOut)) {
                     console.log("Checkout In Range")
                     flag = true
-                } else if(p.checkIn.getTime() > checkIn && checkOut > p.checkOut.getTime()) {
+                } else if(p.checkIn > checkIn && checkOut > p.checkOut) {
+                    console.log("คาบเกี่ยว")
                     flag = true
                 }
             })

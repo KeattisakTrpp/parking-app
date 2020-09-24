@@ -7,6 +7,7 @@ import axios from 'axios'
 import styles from '../css/style'
 import DB from '../constance'
 import { park } from '../action'
+import { Picker } from '@react-native-community/picker'
 
 const ParkScreen = () => {
     const dispatch = useDispatch()
@@ -25,12 +26,13 @@ const ParkScreen = () => {
     const onChangeDate = (event, selectedDate) => {
         const dateInput = selectedDate || date
         setShow(Platform.OS === 'ios')
+        console.log('Date: ' + dateInput)
         setDate(dateInput)
     }
     const onChangeCheckIn = (event, selectedTime) => {
         const time = selectedTime || checkIn
         setShow(Platform.OS === 'ios')
-        // console.log('Check in: ' + time.getTime())
+        console.log('Check in: ' + time)
         setCheckIn(time)
     }
 
@@ -38,7 +40,7 @@ const ParkScreen = () => {
         const time = selectedTime || checkOut
         setShow(Platform.OS === 'ios')
         setShowCheckOut(false)
-        // console.log('Check out: ' + time.getTime())
+        console.log('Check out: ' + time)
         setCheckOut(time)
     }
 
@@ -46,7 +48,7 @@ const ParkScreen = () => {
         return moment(date).format('DD-MM-YYYY')
     }
     const timeToString = (time = new Date()) => {
-        return moment(time).format('hh:mm a')
+        return moment(time).format('hh:mm')
     }
 
     const showDatepicker = () => {
@@ -66,21 +68,27 @@ const ParkScreen = () => {
     }
         
     const submit = () => {
-        axios.post(`${DB}/users/book`, {
-            _id: user._id,
-            date: date.getTime(),
-            checkIn: checkIn.getTime(),
-            checkOut: checkOut.getTime()
-        }).then(res => {
-            if(res.data === 'already reserved') return alert(res.data)
-            // currentDateTime = new Date(moment().tz('Asia/Bangkok').format())
-            // setDate(currentDateTime)
-            // setCheckIn(currentDateTime)
-            dispatch(park(res.data.parkings))
-            alert("Booking complete")
-        }).catch(err => {
-            console.warn(err)
-        })
+        console.log(date)
+        const t1 = checkIn.toLocaleTimeString().slice(0,5)
+        const t2 = checkOut.toLocaleTimeString().slice(0,5)
+        console.log(checkIn.toLocaleTimeString())
+        console.log(checkOut.toLocaleTimeString())
+        if(t2 > t1) {
+            axios.post(`${DB}/users/book`, {
+                _id: user._id,
+                date: date,
+                checkIn: t1,
+                checkOut: t2
+            }).then(res => {
+                if(res.data === 'already reserved') return alert(res.data)
+                dispatch(park(res.data.parkings))
+                alert("Booking complete")
+            }).catch(err => {
+                console.warn(err)
+            })
+        } else {
+            alert("Error")
+        }
     }
 
     return (
@@ -92,12 +100,11 @@ const ParkScreen = () => {
                 {
                     show && (
                         <DateTimePicker
-                        testID="datePicker"
                         timeZoneOffsetInMinutes={0}
-                        minimumDate={date}
+                        minimumDate={new Date()}
                         value={date}
                         mode={mode}
-                        is24Hour={false}
+                        is24Hour={true}
                         display="default"
                         onChange={mode === 'date' ? onChangeDate : onChangeCheckIn }
                         />
@@ -111,9 +118,9 @@ const ParkScreen = () => {
                         <DateTimePicker
                         testID="datePicker"
                         timeZoneOffsetInMinutes={0}
-                        value={checkOut}
+                        value={date}
                         mode="time"
-                        is24Hour={false}
+                        is24Hour={true}
                         display="default"
                         onChange={onChangeCheckOut}
                         />
@@ -135,15 +142,39 @@ const ParkScreen = () => {
             <TouchableOpacity onPress={() => showTimepicker('checkOut')} style={{alignSelf:'stretch'}}>
                 <TextInput style={checkOut.getTime() > checkIn.getTime() ? style.inputt : style.err} placeholder="Time Out" placeholderTextColor='#FFFFFF' returnKeyType="next" editable={false} value={timeToString(checkOut)}/>
             </TouchableOpacity>
+            {/* <Picker style={style.inputt}>
+                { genHour().map(hour => <Picker.Item label={ hour < 10 ? `0${hour}` : `${hour}` } value={hour} /> ) }
+            </Picker>
+            <Picker style={style.inputt}>
+                { genMin().map(min => <Picker.Item label={ min < 10 ? `0${min}` : `${min}` } value={min} /> ) }
+            </Picker> */}
 
             <TouchableOpacity style={{ alignItems: 'center' }}>
                 <Text style={styles.titlee} onPress={submit} >
                     Enter
                 </Text>
             </TouchableOpacity>
+            
         </View>
     )
 }
+
+const genHour = () => {
+    let hours = []
+    for (let i = 1; i < 25; i++) {
+        hours.push(i)
+    }
+    return hours
+}
+
+const genMin = () => {
+    let mins = []
+    for (let i = 0; i < 59; i++) {
+        mins.push(i)
+    }
+    return mins
+}
+
 const style = StyleSheet.create({
     inputt:{
         alignSelf:'stretch',

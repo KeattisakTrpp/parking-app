@@ -23,7 +23,6 @@ const Schedule = () => {
     .then(res => {
       setData(res.data)
       setRefreshing(false)
-      console.log('finish')
     })
     .catch(err => {
       console.warn(err)
@@ -41,9 +40,10 @@ const Schedule = () => {
 
   const loadItems = () => {
     data.map(p => {
-        const date = p.date.split('T')[0]
-        const startTime = timeToString(p.checkIn)
-        const endTime = timeToString(p.checkOut)
+        const dateFormat = p.date.split('T')[0].split('-')
+        const date = `${dateFormat[0]}-${dateFormat[1]}-${parseInt(dateFormat[2])+1}`
+        const startTime = p.checkIn
+        const endTime = p.checkOut
         if (!items[date]) items[date] = []
 
         if(!items[date].some(p => p.start === startTime)) {
@@ -53,7 +53,6 @@ const Schedule = () => {
           })
         }
     })
-    // console.log('data = ', items)
     const newItems = {};
     Object.keys(items).forEach(key => { newItems[key] = items[key]; });
     setItems(newItems)

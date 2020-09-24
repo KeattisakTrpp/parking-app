@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const parkingSchema = new Schema({
   date: { type: Date, required: true },
-  checkIn: { type: Date, required: true },
-  checkOut: { type: Date, required: true },
+  checkIn: { type: String, required: true },
+  checkOut: { type: String, required: true },
   status: {type: String, enum: ['active', 'inactive'] }
 }, {
   timestamps: true,
