@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
+import { NavigationContainer, DarkTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from './HomeScreen'
@@ -10,7 +10,7 @@ import ProfileScreen from './ProfileScreen'
 import HistoryScreen from './HistoryScreen'
 import ScheduleScreen from './ScheduleScreen'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { AppearanceProvider, useColorScheme } from 'react-native-appearance'
+import { AppearanceProvider } from 'react-native-appearance'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -38,8 +38,11 @@ const DetailStact = () => {
                 },
             })}
             tabBarOptions={{
-                activeTintColor: 'tomato',
-                inactiveTintColor: 'gray',
+                activeTintColor: '#e94560',
+                inactiveTintColor: '#8d93ab',
+                tabStyle: {
+                    backgroundColor: '#16213e'
+                }
                 // labelPosition: "beside-icon"
             }}
         >
@@ -71,7 +74,8 @@ const mapStateProps = (state) => ({
 
 const option = {
     headerStyle: {
-        backgroundColor: '#2980b9',
+        // backgroundColor: '#2980b9',
+        backgroundColor: '#16213e',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {

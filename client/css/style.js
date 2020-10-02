@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
     },
     lolo:{
         flex:1,
-        backgroundColor: '#3498db'
+        // backgroundColor: '#3498db'
+        backgroundColor:'#16213e',
     },
     logoContainer:{
         alignItems:'center',
@@ -78,7 +79,8 @@ const styles = StyleSheet.create({
     },
     reg:{
         flex:1,
-        backgroundColor:'#3498db',
+        // backgroundColor:'#3498db',
+        backgroundColor:'#16213e',
         alignSelf:'stretch',
         paddingLeft:60,
         paddingRight:60
@@ -86,10 +88,12 @@ const styles = StyleSheet.create({
     },
     head:{
         fontSize:24,
-        color:'#770000',
+        // color:'#770000',
+        color: '#e94560',
         paddingBottom:10,
         marginBottom:30,
-        borderBottomColor:'#770000',
+        // borderBottomColor:'#770000',
+        borderBottomColor:'#e94560',
         borderBottomWidth:1,
     },
     inputt:{

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text , TouchableOpacity, StyleSheet, SectionList, View} from 'react-native'
 import styles from '../css/style'
 
@@ -46,7 +46,7 @@ const style = StyleSheet.create({
     logout:{
         ...styles.titlee,
         width: 150,
-        backgroundColor:'grey',
+        backgroundColor:'#8d93ab',
     },
     text: {
         color:'#FFFFFF',

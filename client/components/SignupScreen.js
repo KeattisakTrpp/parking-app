@@ -29,16 +29,18 @@ class SignupScreen extends Component {
             cars: this.state.cars,
             tel: this.state.tel,
         }).then(response => {
-            this.props.navigation.navigate('Details')
+            if(response.data === 'username is invalid') return alert('username is invalid')
+            alert("Success")
+            this.props.navigation.navigate('Home')
         }).catch(error => {
             console.warn(error);
-            alert("ssss")
+            alert("Error")
         })
     }
     render() {
         return (
             <ScrollView style={styles.reg}>
-                <Text style={{ fontSize: 20, color:'#770000', marginTop: 15, marginBottom: 10 }}>
+                <Text style={{ fontSize: 20, color:'#e94560', marginTop: 10, marginBottom: 5 }}>
                     User Details
                 </Text>
                 <TextInput style={styles.inputt} placeholder="Username" placeholderTextColor='#FFFFFF' returnKeyType="next" onChangeText={(text) => {
@@ -56,7 +58,7 @@ class SignupScreen extends Component {
                 <TextInput style={styles.inputt} placeholder="Tel" placeholderTextColor='#FFFFFF' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ tel: text });
                 }} />
-                <Text style={{ fontSize: 20, marginTop: 15, marginBottom: 10, color:'#770000' }}>
+                <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 5, color:'#e94560' }}>
                     Car Details
                 </Text>
                 <View style={{ flex: 1}}>
@@ -104,8 +106,8 @@ class SignupScreen extends Component {
                         ))
                     }
                 </View>
-                <TouchableOpacity style={{ alignItems: 'center' }}>
-                    <Text style={styles.titlee} onPress={this._submit}>
+                <TouchableOpacity style={{...styles.buttonContainer, alignItems: 'center', marginBottom: 10 }}>
+                    <Text style={styles.buttonText} onPress={this._submit}>
                         Enter
                     </Text>
                 </TouchableOpacity>

@@ -91,7 +91,8 @@ const ParkScreen = () => {
     return (
         <View style={{
             flex: 1,
-            backgroundColor: '#3498db'
+            // backgroundColor: '#3498db'
+            backgroundColor:'#16213e',
         }}>
             <View>
                 {
