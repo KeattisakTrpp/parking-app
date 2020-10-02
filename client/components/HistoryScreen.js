@@ -9,9 +9,6 @@ const HistoryScreen = () => {
     const dateToString = (date) => {
         return moment(date).format('DD-MM-YYYY')
     }
-    const timeToString = (time) => {
-        return moment(time).format('hh:mm a')
-    }
 
     return (
         <View style={styles.reg}>
@@ -20,8 +17,8 @@ const HistoryScreen = () => {
             </Text>
             <FlatList
                 keyExtractor={(item, index) => index}
-                data={user.parkings}
-                renderItem={({ item, index }) => (<Text key={item}> {dateToString(item.date)}: {timeToString(item.checkIn)} - {timeToString(item.checkOut)} </Text>)}
+                data={user.parkings.sort((a,b) => a - b)} // ascending sort
+                renderItem={({ item, index }) => (<Text key={index}> {dateToString(item.date)}: {item.checkIn} - {item.checkOut} </Text>)}
             />
         </View>
     )

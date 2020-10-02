@@ -1,47 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Text, View } from 'react-native'
 import { Card } from 'react-native-paper'
 import { Agenda } from 'react-native-calendars'
-import moment from 'moment-timezone'
-import axios from 'axios'
-import DB from '../constance'
 
 
-const Schedule = () => {
+const Schedule = ({data, handleRefresh, refreshing}) => {
   const [items, setItems] = useState({})
-  const [data, setData] = useState([])
-  const [refreshing, setRefreshing] = useState(false)
-
-  const timeToString = (time) => {
-    const date = new Date(time);
-    return moment(date).format('hh:mm a')
-  }
-
-  const fetchData = () => {
-    console.log("Fetching")
-    axios.get(`${DB}/users/park`)
-    .then(res => {
-      setData(res.data)
-      setRefreshing(false)
-    })
-    .catch(err => {
-      console.warn(err)
-    })
-  }
-  
-  const handleRefresh = () => {
-    setRefreshing(true)
-    fetchData()
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
-
   const loadItems = () => {
     data.map(p => {
-        const dateFormat = p.date.split('T')[0].split('-')
-        const date = `${dateFormat[0]}-${dateFormat[1]}-${parseInt(dateFormat[2])+1}`
+        const date = p.date.split('T')[0]
         const startTime = p.checkIn
         const endTime = p.checkOut
         if (!items[date]) items[date] = []
@@ -54,7 +21,7 @@ const Schedule = () => {
         }
     })
     const newItems = {};
-    Object.keys(items).forEach(key => { newItems[key] = items[key]; });
+    Object.keys(items).forEach(key => { newItems[key] = items[key] })
     setItems(newItems)
   }
 

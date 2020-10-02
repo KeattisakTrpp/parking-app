@@ -7,21 +7,18 @@ import axios from 'axios'
 import styles from '../css/style'
 import DB from '../constance'
 import { park } from '../action'
-import { Picker } from '@react-native-community/picker'
 
 const ParkScreen = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
 
-    let currentDateTime = new Date(moment(Date.now()).tz('Asia/Bangkok'))
-
-    const [date, setDate] = useState(currentDateTime)
-    const [checkIn, setCheckIn] = useState(currentDateTime)
+    const [date, setDate] = useState(new Date())
+    const [checkIn, setCheckIn] = useState(new Date())
     const [mode, setMode] = useState('date')
     const [show, setShow] = useState(false)
     
     const [showCheckOut, setShowCheckOut] = useState(false)
-    const [checkOut, setCheckOut] = useState(moment(currentDateTime).add(1, 'm').toDate())
+    const [checkOut, setCheckOut] = useState(moment(new Date()).add(1, 'm').toDate())
     
     const onChangeDate = (event, selectedDate) => {
         const dateInput = selectedDate || date
@@ -44,13 +41,10 @@ const ParkScreen = () => {
         setCheckOut(time)
     }
 
-    const dateToString = (date = new Date()) => {
-        return moment(date).format('DD-MM-YYYY')
-    }
-    const timeToString = (time = new Date()) => {
-        return moment(time).format('hh:mm')
-    }
+    const dateToString = (date = new Date()) => moment(date).format('DD-MM-YYYY')
 
+    const timeToString = (time = new Date()) => moment(time).format('HH:mm')
+    
     const showDatepicker = () => {
         setShow(true);
         setMode('date');
@@ -66,14 +60,17 @@ const ParkScreen = () => {
                 setShowCheckOut(true)
         }
     }
-        
+
+    const isValid = (checkIn, checkOut) => {
+        const currentTime = timeToString()
+        if(checkIn >= currentTime && checkOut > checkIn ) return true
+        return false
+    }
     const submit = () => {
-        console.log(date)
         const t1 = checkIn.toLocaleTimeString().slice(0,5)
         const t2 = checkOut.toLocaleTimeString().slice(0,5)
-        console.log(checkIn.toLocaleTimeString())
-        console.log(checkOut.toLocaleTimeString())
-        if(t2 > t1) {
+
+        if(isValid(t1, t2)) {
             axios.post(`${DB}/users/book`, {
                 _id: user._id,
                 date: date,
@@ -87,7 +84,7 @@ const ParkScreen = () => {
                 console.warn(err)
             })
         } else {
-            alert("Error")
+            alert("Invalid Time")
         }
     }
 
@@ -142,12 +139,6 @@ const ParkScreen = () => {
             <TouchableOpacity onPress={() => showTimepicker('checkOut')} style={{alignSelf:'stretch'}}>
                 <TextInput style={checkOut.getTime() > checkIn.getTime() ? style.inputt : style.err} placeholder="Time Out" placeholderTextColor='#FFFFFF' returnKeyType="next" editable={false} value={timeToString(checkOut)}/>
             </TouchableOpacity>
-            {/* <Picker style={style.inputt}>
-                { genHour().map(hour => <Picker.Item label={ hour < 10 ? `0${hour}` : `${hour}` } value={hour} /> ) }
-            </Picker>
-            <Picker style={style.inputt}>
-                { genMin().map(min => <Picker.Item label={ min < 10 ? `0${min}` : `${min}` } value={min} /> ) }
-            </Picker> */}
 
             <TouchableOpacity style={{ alignItems: 'center' }}>
                 <Text style={styles.titlee} onPress={submit} >
@@ -157,22 +148,6 @@ const ParkScreen = () => {
             
         </View>
     )
-}
-
-const genHour = () => {
-    let hours = []
-    for (let i = 1; i < 25; i++) {
-        hours.push(i)
-    }
-    return hours
-}
-
-const genMin = () => {
-    let mins = []
-    for (let i = 0; i < 59; i++) {
-        mins.push(i)
-    }
-    return mins
 }
 
 const style = StyleSheet.create({
