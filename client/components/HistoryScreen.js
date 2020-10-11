@@ -39,7 +39,7 @@ const HistoryScreen = () => {
                         }
                         <View style={{flex: 1, flexDirection: 'row'}}>
                             <Text style={style.detail}>• {item.checkIn} - {item.checkOut} </Text>
-                            <Text style={{...style.detail, color: item.status === 'active' ? '#28df99' : '#8d93ab'}}>{item.status}</Text>
+                            <Text style={{...style.detail, color: item.status === 'reserved' ? '#28df99' : '#8d93ab'}}>{item.status}</Text>
                         </View>
                     </View>   
                 )}

@@ -1,5 +1,6 @@
 let User = require('../models/user.model');
-let Parking = require('../models/parking.model')
+let Parking = require('../models/parking.model');
+const { use } = require('../routes/user');
 
 let parking_lot = 2
 
@@ -50,12 +51,9 @@ module.exports = {
     }, 
     book: async (req, res) => {
         const { _id, date, checkIn, checkOut } = req.body
-        console.log(date)
-        console.log(checkIn)
-        console.log(checkOut)
         try {
             const parking = await Parking.find({date: {
-                $gte: new Date(date).setHours(0,0,0), $lt: new Date(date).setHours(23,59,59)
+                $gte: new Date(date).setHours(0,0,0), $lte: new Date(date).setHours(23,59,59)
             }})
             
             let flag = false
@@ -74,7 +72,7 @@ module.exports = {
             })
             if(flag) return res.json("already reserved")
 
-            const newParking = new Parking({ date, checkIn, checkOut, status: "active" })
+            const newParking = new Parking({ date, checkIn, checkOut, status: "reserved", userId: _id })
             await newParking.save()
             const user = await User.findById(_id)
             user.parkings.push(newParking._id)
@@ -85,6 +83,28 @@ module.exports = {
         catch(err) {
             return res.status(400).send(err)
         }
+    },
+
+    checkIn: async (req, res) => {
+        const { plate, time } = req.body
+        const date = new Date()
+        const user = await User.find({cars: plate})
+        const parkings = await Parking.findOne({userId: user._id, status: 'reserved', date: {
+            $gte: new Date(date).setHours(0,0,0), $lte: new Date(date).setHours(23,59,59)
+            }, checkIn: { $lte: time } })
+        parkings.status = 'active'
+        parkings.save()
+        return res.json(`Welcome ${user.name}`)
+
+    },
+
+    checkOut: async (req, res) => {
+        const { plate } = req.body
+        const date = new Date()
+        const user = await User.find({cars: plate})
+        const parkings = await Parking.findOne({userId: user._id, status: 'active', date: { $gte: new Date(date).setHours(0,0,0), $lte: new Date(date).setHours(23,59,59) }})
+        parkings.status = 'inactive'
+        parkings.save()
+        return res.json(`Goodbye ${user.name}`)
     }
-    
 }
