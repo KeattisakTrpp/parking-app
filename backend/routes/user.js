@@ -23,6 +23,14 @@ router.route('/park').get((req, res) => {
   Parking.find().then(u => res.json(u) ).catch(err => res.json(err))
 })
 
+router.route('/checkin').post((req, res) => {
+  userController.checkIn(res, req)
+})
+
+router.route('/checkout').post((req, res) => {
+  userController.checkOut(res, req)
+})
+
 router.route('/:id').get((req, res) => {
   userController.findById(req, res)
 })

@@ -88,23 +88,34 @@ module.exports = {
     checkIn: async (req, res) => {
         const { plate, time } = req.body
         const date = new Date()
-        const user = await User.find({cars: plate})
-        const parkings = await Parking.findOne({userId: user._id, status: 'reserved', date: {
-            $gte: new Date(date).setHours(0,0,0), $lte: new Date(date).setHours(23,59,59)
+        try {
+            const user = await User.find({cars: plate})
+            const parkings = await Parking.findOne({userId: user._id, status: 'reserved', date: {
+                $gte: new Date(date).setHours(0,0,0), $lte: new Date(date).setHours(23,59,59)
             }, checkIn: { $lte: time } })
-        parkings.status = 'active'
-        parkings.save()
-        return res.json(`Welcome ${user.name}`)
+            parkings.status = 'active'
+            parkings.save()
+            return res.json(`Welcome ${user.name}`)
+        }
+        catch(err) {
+            return res.status(400).send(err)
+        }
 
     },
 
     checkOut: async (req, res) => {
         const { plate } = req.body
         const date = new Date()
-        const user = await User.find({cars: plate})
-        const parkings = await Parking.findOne({userId: user._id, status: 'active', date: { $gte: new Date(date).setHours(0,0,0), $lte: new Date(date).setHours(23,59,59) }})
-        parkings.status = 'inactive'
-        parkings.save()
-        return res.json(`Goodbye ${user.name}`)
+        try {
+
+            const user = await User.find({cars: plate})
+            const parkings = await Parking.findOne({userId: user._id, status: 'active', date: { $gte: new Date(date).setHours(0,0,0), $lte: new Date(date).setHours(23,59,59) }})
+            parkings.status = 'inactive'
+            parkings.save()
+            return res.json(`Goodbye ${user.name}`)
+        }
+        catch(err) {
+            return res.status(400).send(err)
+        }
     }
 }
