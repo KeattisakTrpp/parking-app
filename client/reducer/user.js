@@ -20,6 +20,12 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 parkings: [...action.payload]
             }
+        case 'ADD CAR':
+            // const cars = state.cars.push(action.payload)
+            return state = {
+                ...state,
+                cars: state.cars.push(action.payload)
+            }
         default:
             return state
     }

@@ -11,3 +11,10 @@ export const park = (res) => {
         payload: res
     }
 }
+
+export const addCar = (res) => {
+    return {
+        type: 'Add CAR',
+        payload: res
+    }
+}

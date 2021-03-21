@@ -43,19 +43,19 @@ class SignupScreen extends Component {
                 <Text style={{ fontSize: 20, color:'#e94560', marginTop: 10, marginBottom: 5 }}>
                     User Details
                 </Text>
-                <TextInput style={styles.inputt} placeholder="Username" placeholderTextColor='#FFFFFF' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="Username" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ username: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Password" placeholderTextColor='#FFFFFF' secureTextEntry={true} returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="Password" placeholderTextColor='rgba(255,255,255,0.7)' secureTextEntry={true} returnKeyType="next" onChangeText={(text) => {
                     this.setState({ password: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Your name" placeholderTextColor='#FFFFFF' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="Your name" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ name: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Surname" placeholderTextColor='#FFFFFF' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="Surname" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ surname: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Tel" placeholderTextColor='#FFFFFF' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="Tel" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ tel: text });
                 }} />
                 <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 5, color:'#e94560' }}>
@@ -66,7 +66,7 @@ class SignupScreen extends Component {
                         this.state.cars.map((obj, i) => (
                             <View key={i} style={{marginTop: 10}}>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
-                                    <TextInput style={{ ...styles.inputt, width: 50, height: 50, flex: 4 }} placeholder="Plate" placeholderTextColor='#FFFFFF' returnKeyType="next"
+                                    <TextInput style={{ ...styles.inputt, width: 50, height: 50, flex: 4 }} placeholder="Plate" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"
                                         onChangeText={(text) => {
                                             const cars = [...this.state.cars]
                                             cars[i].plate = text
@@ -92,12 +92,12 @@ class SignupScreen extends Component {
                                     </TouchableOpacity>
                                 </View>
                                 
-                                <TextInput style={styles.inputt} placeholder="Color" placeholderTextColor='#FFFFFF' returnKeyType="next" onChangeText={(text) => {
+                                <TextInput style={styles.inputt} placeholder="Color" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                                     const cars = [...this.state.cars]
                                     cars[i].color = text
                                     this.setState({ cars });
                                 }} />
-                                <TextInput style={styles.inputt} placeholder="Brand" placeholderTextColor='#FFFFFF' returnKeyType="next" onChangeText={(text) => {
+                                <TextInput style={styles.inputt} placeholder="Brand" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                                     const cars = [...this.state.cars]
                                     cars[i].brand = text
                                     this.setState({ cars });

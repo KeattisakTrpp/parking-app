@@ -1,24 +1,27 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import  DateTimePicker  from '@react-native-community/datetimepicker'
 import moment from 'moment-timezone'
 import axios from 'axios'
 import styles from '../css/style'
-import DB from '../constance'
+import DB, { timeSlots } from '../constance'
 import { park } from '../action'
 
 const ParkScreen = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
+    const parkings = useSelector(state => state.user.parkings)
 
+    const [car, setCar] = useState()
+    const [options, setOptions] = useState(timeSlots)
     const [date, setDate] = useState(new Date())
-    const [checkIn, setCheckIn] = useState(new Date())
+    const [checkIn, setCheckIn] = useState(options[0])
     const [mode, setMode] = useState('date')
     const [show, setShow] = useState(false)
     
     const [showCheckOut, setShowCheckOut] = useState(false)
-    const [checkOut, setCheckOut] = useState(moment(new Date()).add(1, 'm').toDate())
+    const [checkOut, setCheckOut] = useState(options[1])
     
     const onChangeDate = (event, selectedDate) => {
         const dateInput = selectedDate || date
@@ -26,20 +29,43 @@ const ParkScreen = () => {
         console.log('Date: ' + dateInput)
         setDate(dateInput)
     }
-    const onChangeCheckIn = (event, selectedTime) => {
-        const time = selectedTime || checkIn
-        setShow(Platform.OS === 'ios')
-        console.log('Check in: ' + time)
-        setCheckIn(time)
-    }
 
-    const onChangeCheckOut = (event, selectedTime) => {
-        const time = selectedTime || checkOut
-        setShow(Platform.OS === 'ios')
-        setShowCheckOut(false)
-        console.log('Check out: ' + time)
-        setCheckOut(time)
-    }
+    useEffect(() => {
+        if(date.getDate() == new Date().getDate()) {
+            console.log("Same")
+            const timeCheck = timeToString().split(':')
+            if(timeCheck > 0 & 30 < timeCheck) timeCheck[1] = "00"
+            else timeCheck[1] = "30"
+    
+            let index = timeSlots.findIndex(time => time === timeCheck.join(":"))
+            setOptions(timeSlots.slice(index))
+            setCheckIn(options[0])
+            setCheckOut(options[1])
+            // console.log(checkIn)
+            // console.log(checkOut)
+        } else {
+            console.log("Not same")
+            setOptions(timeSlots)
+            setCheckIn(timeSlots[0])
+            setCheckOut(timeSlots[1])
+            // console.log(checkIn)
+            // console.log(checkOut)
+        }
+    }, [onChangeDate])
+    // const onChangeCheckIn = (event, selectedTime) => {
+    //     const time = selectedTime || checkIn
+    //     setShow(Platform.OS === 'ios')
+    //     console.log('Check in: ' + time)
+    //     setCheckIn(time)
+    // }
+
+    // const onChangeCheckOut = (event, selectedTime) => {
+    //     const time = selectedTime || checkOut
+    //     setShow(Platform.OS === 'ios')
+    //     setShowCheckOut(false)
+    //     console.log('Check out: ' + time)
+    //     setCheckOut(time)
+    // }
 
     const dateToString = (date = new Date()) => moment(date).format('DD-MM-YYYY')
 
@@ -67,8 +93,10 @@ const ParkScreen = () => {
         return false
     }
     const submit = () => {
-        const t1 = checkIn.toLocaleTimeString().slice(0,5)
-        const t2 = checkOut.toLocaleTimeString().slice(0,5)
+        // const t1 = checkIn.toLocaleTimeString().slice(0,5)
+        // const t2 = checkOut.toLocaleTimeString().slice(0,5)
+        const t1 = checkIn
+        const t2 = checkOut
 
         if(isValid(t1, t2)) {
             axios.post(`${DB}/users/book`, {
@@ -78,7 +106,8 @@ const ParkScreen = () => {
                 checkOut: t2
             }).then(res => {
                 if(res.data === 'already reserved') return alert(res.data)
-                dispatch(park(res.data.parkings))
+                parkings.push(res.data.parkings)
+                dispatch(park(parkings))
                 alert("Booking complete")
             }).catch(err => {
                 console.warn(err)
@@ -91,7 +120,6 @@ const ParkScreen = () => {
     return (
         <View style={{
             flex: 1,
-            // backgroundColor: '#3498db'
             backgroundColor:'#16213e',
         }}>
             <View>
@@ -132,15 +160,39 @@ const ParkScreen = () => {
             </TouchableOpacity>
 
             <Text style={style.label}> Check In </Text>
-            <TouchableOpacity onPress={() => showTimepicker('checkIn')} style={{alignSelf:'stretch'}}>
-                <TextInput style={style.inputt} placeholder="Time in" placeholderTextColor='#FFFFFF' returnKeyType="next" editable={false} value={timeToString(checkIn)}/>
-            </TouchableOpacity>
-
+            <Picker style={style.inputt}
+                selectedValue={checkIn}
+                onValueChange={(val) => setCheckIn(val) }
+            >
+                {
+                    options.map((time) => <Picker.Item key={time} style={style.inputt} label={time} value={time} />)
+                }
+            </Picker>
             <Text style={style.label}> Check Out </Text>
-            <TouchableOpacity onPress={() => showTimepicker('checkOut')} style={{alignSelf:'stretch'}}>
-                <TextInput style={checkOut.getTime() > checkIn.getTime() ? style.inputt : style.err} placeholder="Time Out" placeholderTextColor='#FFFFFF' returnKeyType="next" editable={false} value={timeToString(checkOut)}/>
-            </TouchableOpacity>
+            <Picker style={checkOut > checkIn ? style.inputt : style.err}
+                selectedValue={checkOut}
+                onValueChange={(val) => setCheckOut(val) }
+            >
+                {
+                    options.map((time) => <Picker.Item key={time} style={style.inputt} label={time} value={time} />)
+                }
+            </Picker>
+            <Picker style={style.inputt}
+                selectedValue={car}
+                onValueChange={(val) => setCar(val) }
+            >
+                {
+                    user.cars.map((car) => <Picker.Item key={car.plate} style={style.inputt} label={car.plate} value={car.plate} />)
+                }
+            </Picker>
+            {/* <TouchableOpacity onPress={() => showTimepicker('checkIn')} style={{alignSelf:'stretch'}}>
+                <TextInput style={style.inputt} placeholder="Time in" placeholderTextColor='#FFFFFF' returnKeyType="next" editable={false} value={timeToString(checkIn)}/>
+            </TouchableOpacity> */}
 
+            {/* <Text style={style.label}> Check Out </Text>
+            <TouchableOpacity onPress={() => showTimepicker('checkOut')} style={{alignSelf:'stretch'}}>
+                <TextInput style={checkOut > checkIn ? style.inputt : style.err} placeholder="Time Out" placeholderTextColor='#FFFFFF' returnKeyType="next" editable={false} value={timeToString(checkOut)}/>
+            </TouchableOpacity> */}
             <TouchableOpacity style={{ alignItems: 'center' }}>
                 <Text style={styles.titlee} onPress={submit} >
                     Enter
@@ -169,7 +221,7 @@ const style = StyleSheet.create({
         alignSelf:'stretch',
         height:40,
         marginBottom:15,
-        color:'#FFF',
+        color:'red',
         borderBottomColor: 'red',
         borderBottomWidth:1,
         marginRight: 15,

@@ -1,18 +1,81 @@
-import React from 'react'
-import { Text , TouchableOpacity, StyleSheet, SectionList, View} from 'react-native'
+import React, { useState } from 'react'
+import { Text, TouchableOpacity, StyleSheet, SectionList, View, TextInput, Modal, Button } from 'react-native'
+import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
+import DB from '../constance'
 import styles from '../css/style'
+import { addCar } from '../action'
 
-const ProfileScreen = ({ route ,navigation }) => {
-    
-    _home=async()=>{
+const ProfileScreen = ({ route, navigation }) => {
+
+    const user = useSelector(state => state.user)
+    const dispatch = useDispatch()
+
+    const home = () => {
         navigation.navigate('Home')
     }
 
-    return ( 
-        <View style ={styles.reg}>
-            <Text style={{...styles.head, marginTop: 15}}>
+    const [state, setState] = useState({
+        car: {
+            plate: '',
+            color: '',
+            brand: '',
+        },
+    })
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const add = () => {
+        axios.post(`${DB}/users/${user._id}/car`, {
+            car: state.car
+        }).then(res => {
+            user.cars.push(res.data)
+            dispatch(addCar(res.data))
+            alert("Car Added")
+            setModalVisible(!modalVisible)
+        }).catch(err => {
+            console.warn(err)
+        })
+    }
+
+    return (
+        <View style={styles.reg}>
+            <Text style={{ ...styles.head, marginTop: 15 }}>
                 Profile
             </Text>
+            <Button title="Add Car" onPress={() => setModalVisible(!modalVisible)} style={styles.buttonText, { width: "50%" }} />
+            <View>
+                <Modal animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}
+                >
+                    <View style={{ backgroundColor: '#000000aa', flex: 1 } }>
+                            <View style={{ backgroundColor: '#16213e', margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
+                                <TextInput style={{ ...styles.inputt }} placeholder="Plate" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"
+                                    onChangeText={(text) => {
+                                        const car = state.car
+                                        car.plate = text
+                                        setState({ car });
+                                    }} />
+                                <TextInput style={styles.inputt} placeholder="Color" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                                    const car = state.car
+                                    car.color = text
+                                    setState({ car });
+                                }} />
+                                <TextInput style={styles.inputt} placeholder="Brand" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                                    const car = state.car
+                                    car.brand = text
+                                    setState({ car });
+                                }} />
+                                <TouchableOpacity style={{...styles.buttonContainer, alignItems: 'center', marginBottom: 10 }} onPress={add}>
+                                    <Text style={ styles.buttonText }> Add </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+                                    <Text style={ styles.buttonText }> Cancel </Text>
+                                </TouchableOpacity>
+                            </View>
+                    </View>
+                </Modal>
+            </View>
             <Text style={style.text}>
                 {`${route.params.profiledata.name} ${route.params.profiledata.surname}`}
             </Text>
@@ -20,37 +83,38 @@ const ProfileScreen = ({ route ,navigation }) => {
                 {`Tel: ${route.params.profiledata.tel}`}
             </Text>
             <View>
-                <SectionList 
-                    sections={[ {title: "Plates", data: route.params.profiledata.cars}]}
-                    renderItem={({ item, index }) => ( <SectionListItem key={index} item={item} /> )}
+                <SectionList
+                    sections={[{ title: "Plates", data: route.params.profiledata.cars }]}
+                    renderItem={({ item, index }) => (<SectionListItem key={index} item={item} />)}
                     renderSectionHeader={({ section }) => (
                         <View>
-                            <Text style={style.text}>{section.title}</Text>    
+                            <Text style={style.text}>{section.title}</Text>
                         </View>
                     )}
-                    keyExtractor={(item, index) => index }
+                    keyExtractor={(item, index) => index}
                 >
                 </SectionList>
             </View>
-            <View style={{flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <TouchableOpacity onPress={_home} style={style.logout} >
-                    <Text style={{...style.text, fontSize: 20, marginTop: 0}}>
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <TouchableOpacity onPress={home} style={style.logout} >
+                    <Text style={{ ...style.text, fontSize: 20, marginTop: 0 }}>
                         Log Out
                     </Text>
-                </TouchableOpacity>   
+                </TouchableOpacity>
             </View>
-        </View>
+        </View >
+
     );
 }
 const style = StyleSheet.create({
-    logout:{
+    logout: {
         ...styles.titlee,
         width: 150,
-        backgroundColor:'#8d93ab',
+        backgroundColor: '#8d93ab',
     },
     text: {
-        color:'#FFFFFF',
-        fontSize:25, 
+        color: '#FFFFFF',
+        fontSize: 25,
         marginTop: 10
     },
 })
@@ -58,20 +122,20 @@ const style = StyleSheet.create({
 const SectionListItem = ({ item }) => {
     const style = StyleSheet.create({
         row: {
-            flex: 1, flexDirection: "column", 
-            backgroundColor: "pink", 
-            borderBottomColor: "black", borderBottomWidth:1
+            flex: 1, flexDirection: "column",
+            backgroundColor: "pink",
+            borderBottomColor: "black", borderBottomWidth: 1
         },
         text: {
-            color:'#FFFFFF',
-            fontSize:20,
+            color: '#FFFFFF',
+            fontSize: 20,
             marginLeft: 20,
             marginRight: 10,
         }
     })
     return (
-        <View style={ styles.row }> 
-            <Text style={style.text}>• {item.plate} - {item.color} {item.brand} </Text>   
+        <View style={styles.row}>
+            <Text style={style.text}>• {item.plate} - {item.color} {item.brand} </Text>
         </View>
     )
 }
