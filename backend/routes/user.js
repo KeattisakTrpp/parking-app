@@ -24,15 +24,19 @@ router.route('/park').get((req, res) => {
 })
 
 router.route('/checkin').post((req, res) => {
-  userController.checkIn(res, req)
+  userController.checkIn(req, res)
 })
 
 router.route('/checkout').post((req, res) => {
-  userController.checkOut(res, req)
+  userController.checkOut(req, res)
 })
 
 router.route('/:id').get((req, res) => {
   userController.findById(req, res)
+})
+
+router.route('/:id/car').post((req, res) => {
+  userController.addCar(req, res)
 })
 
 
