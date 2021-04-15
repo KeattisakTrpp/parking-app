@@ -39,19 +39,16 @@ const ParkScreen = () => {
     
             let index = timeSlots.findIndex(time => time === timeCheck.join(":"))
             setOptions(timeSlots.slice(index))
-            setCheckIn(options[0])
-            setCheckOut(options[1])
-            // console.log(checkIn)
-            // console.log(checkOut)
         } else {
             console.log("Not same")
             setOptions(timeSlots)
-            setCheckIn(timeSlots[0])
-            setCheckOut(timeSlots[1])
-            // console.log(checkIn)
-            // console.log(checkOut)
         }
-    }, [onChangeDate])
+    }, [date])
+    
+    useEffect(() => {
+        setCheckIn(options[0])
+        setCheckOut(options[1])
+    }, [options])
     // const onChangeCheckIn = (event, selectedTime) => {
     //     const time = selectedTime || checkIn
     //     setShow(Platform.OS === 'ios')

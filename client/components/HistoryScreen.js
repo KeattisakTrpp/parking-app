@@ -14,7 +14,7 @@ const HistoryScreen = () => {
     const normData = () => {
          // ascending sort
         const items = parkings.sort((a,b) => new Date(b.date) - new Date(a.date))
-        console.log(items)
+        // console.log(items)
         setData(items)
     }
 
