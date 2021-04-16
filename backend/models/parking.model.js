@@ -7,7 +7,7 @@ const parkingSchema = new Schema({
   checkIn: { type: String, required: true },
   checkOut: { type: String, required: true },
   status: {type: String, enum: ['active', 'reserved', 'inactive'] },
-  userId: { type: Schema.Types.ObjectId, required: true }
+  userId: { type: Schema.Types.ObjectId , ref: 'User' , required: true }
 }, {
   timestamps: true,
 });

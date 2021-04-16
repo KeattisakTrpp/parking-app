@@ -14,14 +14,18 @@ const Schedule = ({data, handleRefresh, refreshing}) => {
         if (!items[date]) items[date] = []
 
         if(!items[date].some(p => p.start === startTime)) {
+          const name = p.userId.name + ' ' + p.userId.surname
+          // console.log('items.name = ', items.name)
           items[date].push({
             start: startTime,
-            end: endTime      
+            end: endTime,
+            name
           })
         }
     })
     const newItems = {};
     Object.keys(items).forEach(key => { newItems[key] = items[key] })
+    // console.log(newItems)
     setItems(newItems)
   }
 
@@ -35,7 +39,7 @@ const Schedule = ({data, handleRefresh, refreshing}) => {
               alignItems: 'center',
               height: 64
             }}>
-              <Text>{item.start} - {item.end}</Text>
+              <Text> {item.name} {item.start} - {item.end}</Text>
             </View>
           </Card.Content>
         </Card>

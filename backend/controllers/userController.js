@@ -137,5 +137,15 @@ module.exports = {
         } catch (err) {
             return res.status(400).send(err)
         }
+    },
+
+    getPark: async (req, res) => {
+        try {
+            const park = await Parking.find().populate('userId', 'name surname')
+            console.log(park)
+            return res.json(park)
+        } catch (err) {
+            return res.status(400).send(err)
+        }
     }
 }

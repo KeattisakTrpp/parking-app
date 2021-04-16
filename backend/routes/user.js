@@ -1,6 +1,5 @@
 const router = require('express').Router()
 const userController = require('../controllers/userController')
-const Parking = require('../models/parking.model')
 
 router.route('/').get((req, res) => {
   userController.getAll(res)
@@ -20,7 +19,7 @@ router.route('/login').post((req, res) => {
 })
 
 router.route('/park').get((req, res) => {
-  Parking.find().then(u => res.json(u) ).catch(err => res.json(err))
+  userController.getPark(req, res)
 })
 
 router.route('/checkin').post((req, res) => {
