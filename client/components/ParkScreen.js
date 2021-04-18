@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker, ScrollView } from 'react-native'
+import { Card } from 'react-native-paper'
 import { useSelector, useDispatch } from 'react-redux'
 import  DateTimePicker  from '@react-native-community/datetimepicker'
 import moment from 'moment-timezone'
@@ -19,6 +20,7 @@ const ParkScreen = () => {
     const [checkIn, setCheckIn] = useState(options[0])
     const [mode, setMode] = useState('date')
     const [show, setShow] = useState(false)
+    const [parks, setParks] = useState([])
     
     const [showCheckOut, setShowCheckOut] = useState(false)
     const [checkOut, setCheckOut] = useState(options[1])
@@ -28,6 +30,17 @@ const ParkScreen = () => {
         setShow(Platform.OS === 'ios')
         console.log('Date: ' + dateInput)
         setDate(dateInput)
+    }
+
+    const fetchData = () => {
+        axios.get(`${DB}/users/park/${date}`)
+        .then(res => {
+            console.log(res.data)
+            setParks(res.data)
+        })
+        .catch(err => {
+            console.warn(err)
+        })
     }
 
     useEffect(() => {
@@ -43,26 +56,13 @@ const ParkScreen = () => {
             console.log("Not same")
             setOptions(timeSlots)
         }
+        fetchData()
     }, [date])
     
     useEffect(() => {
         setCheckIn(options[0])
         setCheckOut(options[1])
     }, [options])
-    // const onChangeCheckIn = (event, selectedTime) => {
-    //     const time = selectedTime || checkIn
-    //     setShow(Platform.OS === 'ios')
-    //     console.log('Check in: ' + time)
-    //     setCheckIn(time)
-    // }
-
-    // const onChangeCheckOut = (event, selectedTime) => {
-    //     const time = selectedTime || checkOut
-    //     setShow(Platform.OS === 'ios')
-    //     setShowCheckOut(false)
-    //     console.log('Check out: ' + time)
-    //     setCheckOut(time)
-    // }
 
     const dateToString = (date = new Date()) => moment(date).format('DD-MM-YYYY')
 
@@ -73,25 +73,11 @@ const ParkScreen = () => {
         setMode('date');
     }
 
-    const showTimepicker = (type) => {
-        switch (type) {
-            case 'checkIn':
-                setShow(true)
-                setMode('time')
-                break
-            case 'checkOut':
-                setShowCheckOut(true)
-        }
-    }
-
     const isValid = (checkIn, checkOut) => {
-        const currentTime = timeToString()
-        if(checkIn >= currentTime && checkOut > checkIn ) return true
+        if(checkOut > checkIn)  return true
         return false
     }
     const submit = () => {
-        // const t1 = checkIn.toLocaleTimeString().slice(0,5)
-        // const t2 = checkOut.toLocaleTimeString().slice(0,5)
         const t1 = checkIn
         const t2 = checkOut
 
@@ -115,10 +101,30 @@ const ParkScreen = () => {
     }
 
     return (
-        <View style={{
+        <ScrollView style={{
             flex: 1,
             backgroundColor:'#16213e',
         }}>
+            {parks.length > 0 ? <Text style={style.label}> Parking List </Text> : null}
+            {
+                parks.map((p, i) => {
+                    return (
+                        <Card key={i} style={{ margin: 10 }}>
+                        <Card.Content>
+                            <View  style={{ 
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                height: 8                                
+                            }}>
+                            <Text> {p.userId.name + ' ' + p.userId.surname} {p.checkIn} - {p.checkOut}</Text>
+                            </View>
+                        </Card.Content>
+                        </Card>
+                    )
+                })
+                
+            }
             <View>
                 {
                     show && (
@@ -182,21 +188,13 @@ const ParkScreen = () => {
                     user.cars.map((car) => <Picker.Item key={car.plate} style={style.inputt} label={car.plate} value={car.plate} />)
                 }
             </Picker>
-            {/* <TouchableOpacity onPress={() => showTimepicker('checkIn')} style={{alignSelf:'stretch'}}>
-                <TextInput style={style.inputt} placeholder="Time in" placeholderTextColor='#FFFFFF' returnKeyType="next" editable={false} value={timeToString(checkIn)}/>
-            </TouchableOpacity> */}
-
-            {/* <Text style={style.label}> Check Out </Text>
-            <TouchableOpacity onPress={() => showTimepicker('checkOut')} style={{alignSelf:'stretch'}}>
-                <TextInput style={checkOut > checkIn ? style.inputt : style.err} placeholder="Time Out" placeholderTextColor='#FFFFFF' returnKeyType="next" editable={false} value={timeToString(checkOut)}/>
-            </TouchableOpacity> */}
             <TouchableOpacity style={{ alignItems: 'center' }}>
                 <Text style={styles.titlee} onPress={submit} >
                     Enter
                 </Text>
             </TouchableOpacity>
             
-        </View>
+        </ScrollView>
     )
 }
 
