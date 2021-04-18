@@ -22,6 +22,10 @@ router.route('/park').get((req, res) => {
   userController.getPark(req, res)
 })
 
+router.route('/park/:date').get((req, res) => {
+  userController.getParkByDate(req, res)
+})
+
 router.route('/checkin').post((req, res) => {
   userController.checkIn(req, res)
 })

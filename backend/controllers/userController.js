@@ -55,7 +55,6 @@ module.exports = {
                     $gte: new Date(date).setHours(0, 0, 0), $lte: new Date(date).setHours(23, 59, 59)
                 }
             })
-            // let flag = false
             parking.forEach(p => {
                 // already reserved
                 if (p.checkIn <= checkIn && checkIn <= p.checkOut) {
@@ -69,7 +68,6 @@ module.exports = {
                     return res.json("already reserved")
                 }
             })
-            // if (flag) return res.json("already reserved")
 
             const newParking = new Parking({ date, checkIn, checkOut, status: "reserved", userId: _id })
             await newParking.save()
@@ -144,6 +142,21 @@ module.exports = {
             const park = await Parking.find().populate('userId', 'name surname')
             console.log(park)
             return res.json(park)
+        } catch (err) {
+            return res.status(400).send(err)
+        }
+    },
+
+    getParkByDate: async (req, res) => {
+        try {
+            const { date } = req.params
+            const parking = await Parking.find({
+                date: {
+                    $gte: new Date(date).setHours(0, 0, 0), $lte: new Date(date).setHours(23, 59, 59)
+                }
+            }).populate('userId', 'name surname')
+            console.log(parking)
+            return res.json(parking)
         } catch (err) {
             return res.status(400).send(err)
         }
