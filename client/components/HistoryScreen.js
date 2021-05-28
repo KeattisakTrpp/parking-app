@@ -7,7 +7,8 @@ import moment from 'moment-timezone'
 const HistoryScreen = () => {
     const parkings = useSelector(state => state.user.parkings)
     const [data, setData] = useState([])
-    const dateToString = (date) => {
+    const dateToString = ({ date }) => {
+        if(!date) return null
         return moment(date).format('DD-MM-YYYY')
     }
 
@@ -33,9 +34,9 @@ const HistoryScreen = () => {
                 renderItem={({ item, index }) => (
                     <View key={index}>
                         {
-                            index > 0 ? dateToString(data[index-1].date) !== dateToString(item.date) ? 
-                                <Text style={style.label}> {dateToString(item.date)} </Text> : null 
-                            : <Text style={style.label}> {dateToString(item.date)} </Text>
+                            index > 0 ? dateToString(data[index-1]) !== dateToString(item) ? 
+                                <Text style={style.label}> {dateToString(item)} </Text> : null 
+                            : <Text style={style.label}> {dateToString(item)} </Text>
                         }
                         <View style={{flex: 1, flexDirection: 'row'}}>
                             <Text style={style.detail}>• {item.checkIn} - {item.checkOut} </Text>
