@@ -5,6 +5,7 @@ import ParkScreen from './ParkScreen'
 import ProfileScreen from './ProfileScreen'
 import HistoryScreen from './HistoryScreen'
 import Main from './Main'
+import MOSJA from './MOSJA'
 
 export {
     HomeScreen,
@@ -13,5 +14,6 @@ export {
     ParkScreen,
     ProfileScreen,
     HistoryScreen,
-    Main
+    Main,
+    MOSJA
 }

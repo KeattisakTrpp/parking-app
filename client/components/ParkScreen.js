@@ -156,30 +156,7 @@ const ParkScreen = () => {
                     )
                 }
             </View>
-                
-            <Text style={style.label}> Date </Text>
-            <TouchableOpacity onPress={showDatepicker} style={{alignSelf:'stretch'}}>
-                <TextInput style={style.inputt} placeholder="Date" placeholderTextColor='#FFFFFF' returnKeyType="none" editable={false} value={dateToString(date)}/>
-            </TouchableOpacity>
-
-            <Text style={style.label}> Check In </Text>
-            <Picker style={style.inputt}
-                selectedValue={checkIn}
-                onValueChange={(val) => setCheckIn(val) }
-            >
-                {
-                    options.map((time) => <Picker.Item key={time} style={style.inputt} label={time} value={time} />)
-                }
-            </Picker>
-            <Text style={style.label}> Check Out </Text>
-            <Picker style={checkOut > checkIn ? style.inputt : style.err}
-                selectedValue={checkOut}
-                onValueChange={(val) => setCheckOut(val) }
-            >
-                {
-                    options.map((time) => <Picker.Item key={time} style={style.inputt} label={time} value={time} />)
-                }
-            </Picker>
+            <Text style={style.label}> ทะเบียน </Text>
             <Picker style={style.inputt}
                 selectedValue={car}
                 onValueChange={(val) => setCar(val) }
@@ -188,6 +165,37 @@ const ParkScreen = () => {
                     user.cars.map((car) => <Picker.Item key={car.plate} style={style.inputt} label={car.plate} value={car.plate} />)
                 }
             </Picker>
+            <Text style={style.label}> วันที่จอง </Text>
+            <TouchableOpacity onPress={showDatepicker} style={{alignSelf:'stretch'}}>
+                <TextInput style={style.inputt} placeholder="Date" placeholderTextColor='#FFFFFF' returnKeyType="none" editable={false} value={dateToString(date)}/>
+            </TouchableOpacity>
+
+            <Text style={style.label}> เวลาเข้า </Text>
+            <Picker style={style.inputt}
+                selectedValue={checkIn}
+                onValueChange={(val) => setCheckIn(val) }
+            >
+                {
+                    options.map((time) => <Picker.Item key={time} style={style.inputt} label={time} value={time} />)
+                }
+            </Picker>
+            <Text style={style.label}> เวลาออก </Text>
+            <Picker style={checkOut > checkIn ? style.inputt : style.err}
+                selectedValue={checkOut}
+                onValueChange={(val) => setCheckOut(val) }
+            >
+                {
+                    options.map((time) => <Picker.Item key={time} style={style.inputt} label={time} value={time} />)
+                }
+            </Picker>
+            {/* <Picker style={style.inputt}
+                selectedValue={car}
+                onValueChange={(val) => setCar(val) }
+            >
+                {
+                    user.cars.map((car) => <Picker.Item key={car.plate} style={style.inputt} label={car.plate} value={car.plate} />)
+                }
+            </Picker> */}
             <TouchableOpacity style={{ alignItems: 'center' }}>
                 <Text style={styles.titlee} onPress={submit} >
                     Enter
@@ -202,26 +210,26 @@ const style = StyleSheet.create({
     inputt:{
         alignSelf:'stretch',
         height:40,
-        marginBottom:15,
+        marginBottom:5,
         color:'#FFF',
         borderBottomColor:'#FFFFFF',
         borderBottomWidth:1,
         marginRight: 15,
         marginLeft: 15,
-        marginTop: 15,
+        marginTop: 5,
         fontSize: 20
     },
     label: {color: "white", fontSize: 20 , marginTop: 25, marginLeft: 10 },
     err: {
         alignSelf:'stretch',
         height:40,
-        marginBottom:15,
+        marginBottom:5,
         color:'red',
         borderBottomColor: 'red',
         borderBottomWidth:1,
         marginRight: 15,
         marginLeft: 15,
-        marginTop: 15,
+        marginTop: 5,
         fontSize: 20
     }
 })

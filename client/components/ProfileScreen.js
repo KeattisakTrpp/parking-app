@@ -39,10 +39,10 @@ const ProfileScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.reg}>
-            <Text style={{ ...styles.head, marginTop: 15 }}>
-                Profile
+            <Text style={{ ...styles.head, marginTop: 15 , textAlign:'center'}}>
+                โปรไฟล์
             </Text>
-            <Button title="Add Car" onPress={() => setModalVisible(!modalVisible)} style={styles.buttonText, { width: "50%" }} />
+            <Button title="เพิ่มทะเบียน" onPress={() => setModalVisible(!modalVisible)} style={styles.buttonText, { width: "50%" }} />
             <View>
                 <Modal animationType="fade"
                     transparent={true}
@@ -50,41 +50,44 @@ const ProfileScreen = ({ route, navigation }) => {
                 >
                     <View style={{ backgroundColor: '#000000aa', flex: 1 } }>
                             <View style={{ backgroundColor: '#16213e', margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
-                                <TextInput style={{ ...styles.inputt }} placeholder="Plate" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"
+                                <TextInput style={{ ...styles.inputt }} placeholder="ทะเบียน" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"
                                     onChangeText={(text) => {
                                         const car = state.car
                                         car.plate = text
                                         setState({ car });
                                     }} />
-                                <TextInput style={styles.inputt} placeholder="Color" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                                <TextInput style={styles.inputt} placeholder="สี" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                                     const car = state.car
                                     car.color = text
                                     setState({ car });
                                 }} />
-                                <TextInput style={styles.inputt} placeholder="Brand" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                                <TextInput style={styles.inputt} placeholder="ยี่ห้อ" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                                     const car = state.car
                                     car.brand = text
                                     setState({ car });
                                 }} />
                                 <TouchableOpacity style={{...styles.buttonContainer, alignItems: 'center', marginBottom: 10 }} onPress={add}>
-                                    <Text style={ styles.buttonText }> Add </Text>
+                                    <Text style={ styles.buttonText }>เพิ่ม </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-                                    <Text style={ styles.buttonText }> Cancel </Text>
+                                    <Text style={ styles.buttonText }> ยกเลิก </Text>
                                 </TouchableOpacity>
                             </View>
                     </View>
                 </Modal>
             </View>
             <Text style={style.text}>
-                {`${route.params.profiledata.name} ${route.params.profiledata.surname}`}
+                {`ชื่อ: ${route.params.profiledata.name}`}
             </Text>
             <Text style={style.text}>
-                {`Tel: ${route.params.profiledata.tel}`}
+                {`นามสกุล: ${route.params.profiledata.surname}`}
+            </Text>
+            <Text style={style.text}>
+                {`เบอร์โทร: ${route.params.profiledata.tel}`}
             </Text>
             <View>
                 <SectionList
-                    sections={[{ title: "Plates", data: route.params.profiledata.cars }]}
+                    sections={[{ title: "ทะเบียน", data: route.params.profiledata.cars }]}
                     renderItem={({ item, index }) => (<SectionListItem key={index} item={item} />)}
                     renderSectionHeader={({ section }) => (
                         <View>
@@ -98,7 +101,7 @@ const ProfileScreen = ({ route, navigation }) => {
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <TouchableOpacity onPress={home} style={style.logout} >
                     <Text style={{ ...style.text, fontSize: 20, marginTop: 0 }}>
-                        Log Out
+                        ออกจากระบบ
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -129,13 +132,12 @@ const SectionListItem = ({ item }) => {
         text: {
             color: '#FFFFFF',
             fontSize: 20,
-            marginLeft: 20,
-            marginRight: 10,
+            marginLeft:10
         }
     })
     return (
         <View style={styles.row}>
-            <Text style={style.text}>• {item.plate} - {item.color} {item.brand} </Text>
+            <Text style={style.text}>• {item.plate} - สี {item.color} ยี่ห้อ {item.brand} </Text>
         </View>
     )
 }
