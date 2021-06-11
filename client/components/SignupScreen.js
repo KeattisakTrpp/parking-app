@@ -12,6 +12,7 @@ class SignupScreen extends Component {
             password: '',
             name: '',
             surname: '',
+            email: '',
             tel: '',
             cars: [{
                 plate: '',
@@ -26,6 +27,7 @@ class SignupScreen extends Component {
             password: this.state.password,
             name: this.state.name,
             surname: this.state.surname,
+            email: this.state.email,
             cars: this.state.cars,
             tel: this.state.tel,
         }).then(response => {
@@ -48,6 +50,9 @@ class SignupScreen extends Component {
                 }} />
                 <TextInput style={styles.inputt} placeholder="Password" placeholderTextColor='rgba(255,255,255,0.7)' secureTextEntry={true} returnKeyType="next" onChangeText={(text) => {
                     this.setState({ password: text });
+                }} />
+                <TextInput style={styles.inputt} placeholder="Email" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                    this.setState({ email: text });
                 }} />
                 <TextInput style={styles.inputt} placeholder="Your name" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ name: text });

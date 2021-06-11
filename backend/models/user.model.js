@@ -7,6 +7,10 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   name: { type: String, required: true },
   surname: { type: String, required: true },
+  email: { type: String, required: true, 
+    unique: true,
+    match: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  },
   tel: { type: String, required: true },
   cars: [{
     plate: { type: String, required: true },

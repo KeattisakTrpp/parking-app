@@ -1,5 +1,7 @@
-let User = require('../models/user.model');
-let Parking = require('../models/parking.model');
+const User = require('../models/user.model');
+const Parking = require('../models/parking.model');
+const EmailService = require('../services/email.service');
+const emailService = EmailService.getInstance();
 
 module.exports = {
     getAll: async (res) => {
@@ -12,11 +14,19 @@ module.exports = {
     },
 
     add: async (req, res) => {
-        const { username, password, name, surname, cars, tel } = req.body;
+        const { username, password, name, surname, cars, tel, email } = req.body;
         try {
             const user = await User.findOne({ username })
             if (user) return res.json('username is invalid')
-            const newUser = new User({ username, password, name, surname, cars, tel });
+            const newUser = new User({ username, password, name, surname, cars, tel, email });
+            const emailObject = {
+                from: 'Parking app', // sender address
+                to: "supanat_zaa222@hotmail.com", // list of receivers
+                subject: "Hello ✔", // Subject line
+                text: "Test sending email", // plain text body
+                // html: "<b>Hello world?</b>", // html body
+            }
+            emailService.sendMail(emailObject)
             await newUser.save()
             return res.json(newUser)
         } catch (err) {
