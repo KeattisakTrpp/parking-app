@@ -1,8 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema } from "mongoose";
+import { IParking } from "./iparking.i";
 
-const Schema = mongoose.Schema;
-
-const parkingSchema = new Schema({
+const parkingSchema: Schema = new Schema({
   date: { type: Date, required: true },
   checkIn: { type: String, required: true },
   checkOut: { type: String, required: true },
@@ -12,6 +11,4 @@ const parkingSchema = new Schema({
   timestamps: true,
 });
 
-const Parking = mongoose.model('Parking', parkingSchema);
-
-module.exports = Parking;
+export const Parking = mongoose.model<IParking>('Parking', parkingSchema);
