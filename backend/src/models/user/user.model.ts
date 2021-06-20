@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
-import { IUser } from './iuser.i';
+import { IUser, UserStatus } from './iuser.i';
 
 const userSchema: Schema = new Schema({
   username: { type: String, required: true },
@@ -16,6 +16,7 @@ const userSchema: Schema = new Schema({
     color: { type: String, required: true },
     brand: { type: String, required: true }
   }],
+  status: { type: UserStatus, default: UserStatus.notVerified }
 }, {
   timestamps: true,
 });

@@ -1,5 +1,7 @@
-import nodemailer from 'nodemailer'
+import axios from 'axios'
+import dotenv from 'dotenv'
 
+dotenv.config()
 
 export class EmailService {
     constructor() { }
@@ -13,25 +15,23 @@ export class EmailService {
         return this.instance
     }
 
-    public async sendMail({ from, to, subject, text }) {
+    public async sendMail(email: string, userId: string) {
         try {
-            const testAccount = await nodemailer.createTestAccount()
-            const transporter = nodemailer.createTransport({
-                host: "smtp.ethereal.email",
-                port: 587,
-                secure: false, // true for 465, false for other ports
-                auth: {
-                    user: testAccount.user, // generated ethereal user
-                    pass: testAccount.pass, // generated ethereal password
+            const data = {
+                serviceId: process.env.MAILER_SERVICE,
+                templateId: process.env.MAILER_TEMPLATE,
+                userId: process.env.MAILER_USER,
+                template_params: {
+                    to: email,
+                    link: process.env.DOMAIN_NAME.concat(`users/confirm?userId=${userId}`)
                 }
-            })
-            const info = await transporter.sendMail({ from, to, subject, text })
-            console.log("Message sent: %s", info.messageId);
-            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+            };
+            await axios.post('https://api.emailjs.com/api/v1.0/email/send', data)
         }
         catch (err) {
-            console.log('Cannot send email successfuly')
-            console.log(err)
+            if(err.response) console.log(err.response.data)
+            else console.log(err)
+            throw new Error('Cannot send email successfully')
         }
     }
 

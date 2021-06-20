@@ -8,10 +8,16 @@ export interface IUser extends Document {
     email: string,
     tel: string,
     cars: Car[],
+    status: UserStatus
 }
 
 interface Car {
     plate: string,
     color: string,
     brand: string
+}
+
+export enum UserStatus {
+    'verified' = 'verified',
+    'notVerified' = 'not verified'
 }

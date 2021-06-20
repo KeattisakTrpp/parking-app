@@ -10,7 +10,7 @@ export interface IParking extends Document {
 }
 
 export enum Status {
-    'active', 
-    'reserved', 
-    'inactive'
+    'reserved' = 'reserved',
+    'checkIn' = 'check in',
+    'checkOut' = 'check out'
 }

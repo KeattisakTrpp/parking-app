@@ -22,6 +22,10 @@ class SignupScreen extends Component {
         }
     }
     _submit = async () => {
+        if(!this.checkEmail(this.state.email)) {
+            console.warn('email is not valid')
+            return
+        }
         axios.post(`${DB}/users/signup`, {
             username: this.state.username,
             password: this.state.password,
@@ -39,6 +43,10 @@ class SignupScreen extends Component {
             alert("Error")
         })
     }
+    checkEmail = (email) => {
+        const regex = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
+        return regex.test(email)
+    }
     render() {
         return (
             <ScrollView style={styles.reg}>
@@ -51,7 +59,7 @@ class SignupScreen extends Component {
                 <TextInput style={styles.inputt} placeholder="Password" placeholderTextColor='rgba(255,255,255,0.7)' secureTextEntry={true} returnKeyType="next" onChangeText={(text) => {
                     this.setState({ password: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Email" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="Email" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"  onChangeText={(text) => {
                     this.setState({ email: text });
                 }} />
                 <TextInput style={styles.inputt} placeholder="Your name" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {

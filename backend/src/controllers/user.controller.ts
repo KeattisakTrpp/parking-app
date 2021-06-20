@@ -3,13 +3,14 @@ import { Request, Response } from 'express'
 import { Parking } from '../models/parking/parking.model'
 import { IParking, Status } from "../models/parking/iparking.i"
 import { EmailService } from "../services/email.service"
+import { UserStatus } from "../models/user/iuser.i"
 
 export const getAll = async (res: Response) => {
     try {
         const users = await User.find()
         return res.json(users)
     } catch (err) {
-        return res.status(400).send(err)
+        return res.status(400).send(err.message)
     }
 }
 
@@ -17,20 +18,14 @@ export const create = async (req: Request, res: Response) => {
     const { username, password, name, surname, cars, tel, email } = req.body;
     try {
         const user = await User.findOne({ username })
-        if (user) return res.json('username is invalid')
+        if (user) throw new Error('username is invalid')
         const newUser = new User({ username, password, name, surname, cars, tel, email });
-        const emailObject = {
-            from: 'Parking app', // sender address
-            to: "supanat_zaa222@hotmail.com", // list of receivers
-            subject: "Hello ✔", // Subject line
-            text: "Test sending email", // plain text body
-            // html: "<b>Hello world?</b>", // html body
-        }
-        EmailService.getInstance().sendMail(emailObject)
+        EmailService.getInstance().sendMail(email, newUser._id)
         await newUser.save()
         return res.json(newUser)
     } catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err.message)
     }
 }
 
@@ -40,7 +35,8 @@ export const findById = async (req: Request, res: Response) => {
         const user = await User.findById(id)
         return res.json(user)
     } catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send('User not found')
     }
 }
 
@@ -49,15 +45,19 @@ export const login = async (req: Request, res: Response) => {
     try {
         const user = await User.findOne({ username })
         if(!user) {
-            throw new Error('user not found');
+            throw new Error('user not found')
+        }
+        if(user.status !== UserStatus.verified) {
+            throw new Error('please verify your account before login')
         }
         const parkings = await Parking.find({ userId: user._id })
         console.log(user.password, password)
-        if (user.password !== password) return res.json('wrong')
+        if (user.password !== password) return res.json('username or password incorrect')
         return res.json({...user, parkings})
     }
     catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err.message)
     }
 }
 
@@ -78,13 +78,13 @@ export const book = async (req: Request, res: Response) => {
             // already reserved
             if (p.checkIn <= checkIn && checkIn <= p.checkOut) {
                 console.log("Checkin In Range")
-                return res.json("already reserved")
+                throw new Error("already reserved")
             } else if ((p.checkIn <= checkOut && checkOut <= p.checkOut)) {
                 console.log("Checkout In Range")
-                return res.json("already reserved")
+                throw new Error("already reserved")
             } else if (p.checkIn > checkIn && checkOut > p.checkOut) {
-                console.log("คาบเกี่ยว")
-                return res.json("already reserved")
+                console.log("collapse")
+                throw new Error("already reserved")
             }
         })
 
@@ -93,7 +93,8 @@ export const book = async (req: Request, res: Response) => {
         return res.json(newParking)
     }
     catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err.message)
     }
 }
 
@@ -116,12 +117,13 @@ export const checkIn = async (req: Request, res: Response) => {
             },
             checkIn: { $gte: time }
         })
-        parkings.status = Status.active
+        parkings.status = Status.checkIn
         parkings.save()
         return res.json(`Welcome ${user.name}`)
     }
     catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err.message)
     }
 }
 
@@ -135,19 +137,20 @@ export const checkOut = async (req: Request, res: Response) => {
         const user = await User.findOne({ cars: plate })
         const parkings = await Parking.findOne({
             userId: user._id,
-            status: Status.active, 
+            status: Status.checkIn, 
             date: { 
                 $gte: start,
                 $lte: end
             },
             checkOut: { $gte: time }
         })
-        parkings.status = Status.inactive
+        parkings.status = Status.checkOut
         parkings.save()
         return res.json(`Goodbye ${user.name}`)
     }
     catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err.message)
     }
 }
 
@@ -159,7 +162,8 @@ export const addCar = async (req: Request, res: Response) => {
         user.save()
         return res.json(req.body.car)
     } catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err.message)
     }
 }
 
@@ -169,7 +173,8 @@ export const getPark = async (req: Request, res: Response) => {
         console.log(park)
         return res.json(park)
     } catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err.message)
     }
 }
 
@@ -189,6 +194,18 @@ export const getParkByDate = async (req: Request, res: Response) => {
         console.log(parking)
         return res.json(parking)
     } catch (err) {
-        return res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err.message)
+    }
+}
+
+export const verify = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.query
+        await User.findByIdAndUpdate(userId ,{ status: UserStatus.verified })
+        return res.json('Your account is verified')
+    } catch (err) {
+        console.log(err)
+        return res.status(400).send(err.message)
     }
 }
