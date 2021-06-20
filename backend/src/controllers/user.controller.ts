@@ -53,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
         const parkings = await Parking.find({ userId: user._id })
         console.log(user.password, password)
         if (user.password !== password) return res.json('username or password incorrect')
-        return res.json({...user, parkings})
+        return res.json({...user.toObject(), parkings})
     }
     catch (err) {
         console.log(err)
@@ -201,8 +201,11 @@ export const getParkByDate = async (req: Request, res: Response) => {
 
 export const verify = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.query
-        await User.findByIdAndUpdate(userId ,{ status: UserStatus.verified })
+        const userId  = req.params.id
+        const user = await User.findById(userId)
+        if(!user) throw new Error('User not found')
+        user.status = UserStatus.verified
+        await user.save()
         return res.json('Your account is verified')
     } catch (err) {
         console.log(err)
