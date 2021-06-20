@@ -23,7 +23,7 @@ class SignupScreen extends Component {
     }
     _submit = async () => {
         if(!this.checkEmail(this.state.email)) {
-            console.warn('email is not valid')
+            console.warn('โปรใส่อีเมล')
             return
         }
         axios.post(`${DB}/users/signup`, {
@@ -36,11 +36,11 @@ class SignupScreen extends Component {
             tel: this.state.tel,
         }).then(response => {
             if(response.data === 'username is invalid') return alert('username is invalid')
-            alert("Success")
+            alert("สมัครสำเร็จ")
             this.props.navigation.navigate('Home')
         }).catch(error => {
             console.warn(error);
-            alert("Error")
+            alert("เกิดข้อผิดพลาด สมัครไม่สำเร็จ")
         })
     }
     checkEmail = (email) => {
@@ -51,28 +51,28 @@ class SignupScreen extends Component {
         return (
             <ScrollView style={styles.reg}>
                 <Text style={{ fontSize: 20, color:'#e94560', marginTop: 10, marginBottom: 5 }}>
-                    User Details
+                    ข้อมูลผู้ใช้
                 </Text>
-                <TextInput style={styles.inputt} placeholder="Username" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="ชื่อบัญชีผู้ใช้" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ username: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Password" placeholderTextColor='rgba(255,255,255,0.7)' secureTextEntry={true} returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="รหัสผ่าน" placeholderTextColor='rgba(255,255,255,0.7)' secureTextEntry={true} returnKeyType="next" onChangeText={(text) => {
                     this.setState({ password: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Email" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"  onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="อีเมล" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"  onChangeText={(text) => {
                     this.setState({ email: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Your name" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="ชื่อ" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ name: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Surname" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="นามสกุล" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ surname: text });
                 }} />
-                <TextInput style={styles.inputt} placeholder="Tel" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                <TextInput style={styles.inputt} placeholder="เบอร์โทร" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                     this.setState({ tel: text });
                 }} />
                 <Text style={{ fontSize: 20, marginTop: 10, marginBottom: 5, color:'#e94560' }}>
-                    Car Details
+                    ข้อมูลรถ
                 </Text>
                 <View style={{ flex: 1}}>
                     {
@@ -105,12 +105,12 @@ class SignupScreen extends Component {
                                     </TouchableOpacity>
                                 </View>
                                 
-                                <TextInput style={styles.inputt} placeholder="Color" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                                <TextInput style={styles.inputt} placeholder="สีรถ" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                                     const cars = [...this.state.cars]
                                     cars[i].color = text
                                     this.setState({ cars });
                                 }} />
-                                <TextInput style={styles.inputt} placeholder="Brand" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
+                                <TextInput style={styles.inputt} placeholder="ยี่ห้อ" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next" onChangeText={(text) => {
                                     const cars = [...this.state.cars]
                                     cars[i].brand = text
                                     this.setState({ cars });
