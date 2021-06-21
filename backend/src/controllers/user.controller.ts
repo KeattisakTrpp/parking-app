@@ -20,7 +20,7 @@ export const create = async (req: Request, res: Response) => {
         const user = await User.findOne({ username })
         if (user) throw new Error('username is invalid')
         const newUser = new User({ username, password, name, surname, cars, tel, email });
-        EmailService.getInstance().sendMail(email, newUser._id)
+        await EmailService.getInstance().sendMail(email, newUser._id)
         await newUser.save()
         return res.json(newUser)
     } catch (err) {
