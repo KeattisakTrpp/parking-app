@@ -64,9 +64,9 @@ export const login = async (req: Request, res: Response) => {
 export const book = async (req: Request, res: Response) => {
     const { _id, date, checkIn, checkOut } = req.body
     try {
-        const start = new Date()
+        const start = new Date(date)
         start.setHours(0, 0, 0)
-        const end = new Date()
+        const end = new Date(date)
         end.setHours(23, 59, 59)
         const parking: IParking[] = await Parking.find({
             date: { 
