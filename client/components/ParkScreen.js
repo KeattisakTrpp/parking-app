@@ -89,8 +89,9 @@ const ParkScreen = () => {
                 checkOut: t2
             }).then(res => {
                 if(res.data === 'already reserved') return alert(res.data)
-                parkings.push(res.data.parkings)
+                parkings.push(res.data)
                 dispatch(park(parkings))
+                //console.log(parkings)
                 alert("Booking complete")
             }).catch(err => {
                 console.warn(err)

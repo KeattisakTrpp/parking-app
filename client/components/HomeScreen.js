@@ -65,12 +65,12 @@ const HomeScreen = ({ navigation }) => {
             />
             <TouchableOpacity style={styles.buttonContainer} onPress={_login} >
                 <Text style={styles.buttonText}>
-                    Login
+                    เข้าสู่ระบบ
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.buttonContainer} onPress={_sign} >
             <Text style={styles.buttonText}>
-                Sign Up
+                สมัครสมาชิก
             </Text>
             </TouchableOpacity>
         </View>

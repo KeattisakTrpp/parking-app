@@ -11,7 +11,7 @@ import HistoryScreen from './HistoryScreen'
 import ScheduleScreen from './ScheduleScreen'
 import MOSJA from './MOSJA'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { AppearanceProvider } from 'react-native-appearance'
+import { Appearance } from 'react-native'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -57,7 +57,7 @@ const DetailStact = () => {
 
 const Main = () => {
     return (
-        <AppearanceProvider>
+      
             <NavigationContainer theme={DarkTheme}>
                 <Stack.Navigator>
                     <Stack.Screen name="Home" component={HomeScreen} options={option} />
@@ -69,7 +69,7 @@ const Main = () => {
                     <Stack.Screen name="History" component={HistoryScreen} options={option} />
                 </Stack.Navigator>
             </NavigationContainer>
-        </AppearanceProvider>
+ 
     )
 }
 

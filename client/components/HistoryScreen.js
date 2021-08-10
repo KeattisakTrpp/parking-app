@@ -15,7 +15,7 @@ const HistoryScreen = () => {
     const normData = () => {
          // ascending sort
         const items = parkings.sort((a,b) => new Date(b.date) - new Date(a.date))
-        // console.log(items)
+        console.log(items)
         setData(items)
     }
 
@@ -26,10 +26,10 @@ const HistoryScreen = () => {
     return (
         <View style={styles.reg}>
             <Text style={{ ...styles.head, marginTop: 15 }}>
-                History
+                ประวัติการจอง
             </Text>
             <FlatList
-                keyExtractor={(item, index) => index}
+                keyExtractor={(item, index) => index+""}
                 data={data}
                 renderItem={({ item, index }) => (
                     <View key={index}>

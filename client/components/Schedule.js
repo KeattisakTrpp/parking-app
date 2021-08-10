@@ -14,6 +14,7 @@ const Schedule = ({data, handleRefresh, refreshing}) => {
         if (!items[date]) items[date] = []
 
         if(!items[date].some(p => p.start === startTime)) {
+          console.log(p)
           const name = p.userId.name + ' ' + p.userId.surname
           // console.log('items.name = ', items.name)
           items[date].push({

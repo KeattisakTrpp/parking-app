@@ -23,9 +23,10 @@ class SignupScreen extends Component {
     }
     _submit = async () => {
         if(!this.checkEmail(this.state.email)) {
-            console.warn('โปรใส่อีเมล')
+            console.warn('โปรดใส่อีเมล')
             return
         }
+        console.log(this.state);
         axios.post(`${DB}/users/signup`, {
             username: this.state.username,
             password: this.state.password,
@@ -36,7 +37,7 @@ class SignupScreen extends Component {
             tel: this.state.tel,
         }).then(response => {
             if(response.data === 'username is invalid') return alert('username is invalid')
-            alert("สมัครสำเร็จ")
+            alert("กรุณาไปยืนยันตัวในอีเมล")
             this.props.navigation.navigate('Home')
         }).catch(error => {
             console.warn(error);
@@ -79,7 +80,7 @@ class SignupScreen extends Component {
                         this.state.cars.map((obj, i) => (
                             <View key={i} style={{marginTop: 10}}>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
-                                    <TextInput style={{ ...styles.inputt, width: 50, height: 50, flex: 4 }} placeholder="Plate" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"
+                                    <TextInput style={{ ...styles.inputt, width: 50, height: 50, flex: 4 }} placeholder="ทะเบียน" placeholderTextColor='rgba(255,255,255,0.7)' returnKeyType="next"
                                         onChangeText={(text) => {
                                             const cars = [...this.state.cars]
                                             cars[i].plate = text
