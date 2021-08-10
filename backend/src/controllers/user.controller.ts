@@ -4,6 +4,7 @@ import { Parking } from '../models/parking/parking.model'
 import { IParking, Status } from "../models/parking/iparking.i"
 import { EmailService } from "../services/email.service"
 import { UserStatus } from "../models/user/iuser.i"
+import { History } from "../models/history/history.model"
 
 export const getAll = async (res: Response) => {
     try {
@@ -87,7 +88,12 @@ export const book = async (req: Request, res: Response) => {
                 throw new Error("already reserved")
             }
         })
-
+        const fStart = `${end.getUTCDate()}/${end.getUTCMonth()+1}/${end.getUTCFullYear()} ${checkIn}`
+        const fStop = `${end.getUTCDate()}/${end.getUTCMonth()+1}/${end.getUTCFullYear()} ${checkOut}`
+        const user = await User.findById(_id)
+        const number = await History.countDocuments() + ''
+        const newHistory = new History({ autonum: number, start: fStart, stop: fStop, plate: user.cars[0].plate, status: "0"})
+        await newHistory.save()
         const newParking = new Parking({ date, checkIn, checkOut, status: "reserved", userId: _id })
         await newParking.save()
         return res.json(newParking)
